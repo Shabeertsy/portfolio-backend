@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-28g^mq1rg#k&9z!ecri2-607sq6tq&p#@i3+s8qsfx$22^aw(-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['localhost', 'portfolio-backend-rust-two.vercel.app']
+
 
 
 # Application definition
