@@ -18,15 +18,19 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+
+
  
                                     ###### Authentication #####   
-## send otp ##
+
+## Generate otp ##
 def send_otp(length=6):
     characters = "0123456789"
     otp = ''.join(random.choice(characters) for _ in range(length))
-    print(otp,'otp')
     return otp
 
+
+## Send email ##
 def send_email(template,subject,content,recipient):
     sender = settings.EMAIL_HOST_USER
     try:
@@ -43,12 +47,10 @@ def send_email(template,subject,content,recipient):
 
 
 
-
 @api_view(['POST'])
 def registration_view(request):
     if request.method == 'POST':
         serializer = ProfileSerializer(data=request.data)
-
         if serializer.is_valid():
             user=serializer.save()
 
@@ -60,12 +62,9 @@ def registration_view(request):
                 otp_obj.created_time=datetime.now()
                 otp_obj.save()
             else:
-                new_obj=OTPVerification.objects.create(
-                        otp=otp,
-                        profile=user,
-                        created_time=datetime.now()
-                        )
+                new_obj=OTPVerification.objects.create(otp=otp,profile=user,created_time=datetime.now())
                 new_obj.save()
+
             if new_obj or otp_obj:
                 template='otp.html'
                 subject='Email Verification'
@@ -81,9 +80,8 @@ def registration_view(request):
 def login(request):
     username = request.data.get('email')
     password = request.data.get('password')
-
+    
     user = authenticate(email=username, password=password)
-
     if user is not None:
         refresh = RefreshToken.for_user(user)
         token = {
@@ -129,11 +127,7 @@ def resend_otp(request,user_id):
             otp_obj.created_time=datetime.now()
             otp_obj.save()
         else:
-            new_obj=OTPVerification.objects.create(
-                    otp=otp,
-                    profile=profile,
-                    created_time=datetime.now()
-                        )
+            new_obj=OTPVerification.objects.create(otp=otp,profile=profile,created_time=datetime.now())
             new_obj.save()
 
         if new_obj or otp_obj:
@@ -142,10 +136,15 @@ def resend_otp(request,user_id):
             content={'otp':otp}
             recipient=profile.email
             email_status=send_email(template,subject,content,recipient)
-        return Response({'msg':'otp send successfully'}, status=status.HTTP_201_CREATED)
+
+            if email_status == True:
+                return Response({'msg':'otp send successfully'}, status=status.HTTP_200_OK)
+        return Response({'msg':'otp sending failed '},status=status.HTTP_400_BAD_REQUEST)
 
 
-              ##### General apis ####
+
+
+                                        #### General apis ####
 
 @api_view(['GET'])
 @permission_classes([IsUser])
