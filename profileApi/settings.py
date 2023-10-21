@@ -66,7 +66,7 @@ ROOT_URLCONF = 'profileApi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -125,27 +126,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 AUTH_USER_MODEL = 'api.Profile'
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
-
 STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -154,7 +144,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
 # JWT settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -185,3 +174,18 @@ CORS_ALLOW_METHODS = [
 #     "Authorization",
 #     "Content-Type",
 # ]
+
+
+# email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
+EMAIL_HOST_USER = os.getenv('email_user')
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True 
+EMAIL_HOST_PASSWORD = os.getenv('email_password')
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
