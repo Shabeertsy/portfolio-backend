@@ -84,9 +84,11 @@ def login(request):
     user = authenticate(email=username, password=password)
     if user is not None:
         refresh = RefreshToken.for_user(user)
+        access_token = refresh.access_token
+        access_token['name'] = user.first_name
         token = {
             'refresh': str(refresh),
-            'access': str(refresh.access_token),
+            'access': str(access_token),
         }
         return Response(token)
     else:
