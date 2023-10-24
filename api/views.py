@@ -153,7 +153,7 @@ def resend_otp(request,user_id):
 def get_data(request):
     if request.method=='GET':
         user=request.user
-        profile=get_object_or_404(profile,pk=user.id)
+        profile=get_object_or_404(Profile,pk=user.id)
         serializer=ProfileSerializer(profile)
         return Response(serializer.data,status=status.HTTP_200_OK)
     return Response({'msg':'invalid otp'},status=status.HTTP_400_BAD_REQUEST)
