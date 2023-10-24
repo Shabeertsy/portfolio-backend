@@ -38,7 +38,7 @@ def send_email(template,subject,content,recipient):
         text_content = strip_tags(html_content)
         msg = EmailMultiAlternatives(subject, text_content, from_email=sender, to=[recipient])
         msg.attach_alternative(html_content, 'text/html')
-        msg.send()
+        # msg.send()
         return True
     except Exception as e:
         print(e)
