@@ -49,6 +49,8 @@ class Profile(AbstractUser):
     groups = models.ManyToManyField('auth.Group',blank=True,related_name='user_profiles',related_query_name='user_profile',)
     user_permissions = models.ManyToManyField('auth.Permission',blank=True,related_name='user_profiles',related_query_name='user_profile',)
     verify=models.BooleanField(default=False)
+    first_name=models.CharField(max_length=200,null=True,blank=True)
+    last_name=models.CharField(max_length=200,null=True,blank=True)
     objects = CustomUserManager()
 
     def  __str__(self):
